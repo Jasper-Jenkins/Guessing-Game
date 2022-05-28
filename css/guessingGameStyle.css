@@ -1,0 +1,105 @@
+#game {
+    background-color: cadetblue;
+    width: 1000px;
+    height: auto;
+    float: left;
+}
+
+.resultParas {
+    background-color: green;
+    width: 100%;
+    height: auto;
+    float: left;
+}
+
+.guesses {
+    background-color: whitesmoke;
+    width: 100%;
+    height: 100px;
+    float: left;
+}
+
+.lastResult {
+    background-color: aqua;
+    width: 50%;
+    height: 100px;
+    float: left;
+}
+
+.lowOrHi {
+    background-color: aquamarine;
+    width: 50%;
+    height: 100px;
+    float: left;
+}
+
+.guessRange {
+    background-color:dodgerblue ;
+    width: 100%; 
+    height: 80px;
+    float: left;
+    margin: 0px 0px 0px 0px;    
+}
+
+#numberLine {
+    width: 100%;
+    background: white;
+    height: auto;
+    float: left;
+    
+}
+
+.numberLineNumbers {
+    color: black;
+    float: left;
+    width: 28px;
+    height: 30px;
+    margin: 0px;
+    padding: 0px;
+    border: 1px solid black;
+    font-size: 15px;
+    /*text-align: center;*/
+    text-align:center center;
+    font-weight: bold;
+}
+
+#choosePlayers {
+    background-color: none;    
+    margin: auto;
+    width: 50%;
+    padding: 0px;
+    border: none;
+    float:left;
+}
+
+
+#playersArea {
+    width: 100%;
+    height: auto;
+    background-color: red;
+    float: left;
+    margin: 0px;
+    padding: 0px;
+}
+
+#playersArea label {
+    color: white;
+}
+
+
+.player {
+    width: 48%;
+    height: auto;
+    background-color: blue;
+    float: left;
+    padding: 10px;
+    margin: 0px;
+}
+
+
+/*.numberChosen {
+    color: black;
+    background-color:red;
+    font-weight: bold;
+}*/
+

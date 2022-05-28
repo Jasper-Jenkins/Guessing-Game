@@ -1,0 +1,19 @@
+#hero {
+    width: 50px;
+    height: 50px;
+    background-color: mediumpurple;
+    padding: 10px 0px 10px 0px;
+    border: 10px solid groove;
+    float: left;
+}
+
+.greenLaser {
+    width: 10px;
+    height: 10px;
+    background-color: green;
+    /*top: 0px; should be relative to heros position*/
+}
+
+canvas {
+    border: 1px solid black;
+}
