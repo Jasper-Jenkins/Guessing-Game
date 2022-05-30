@@ -75,8 +75,7 @@ function CreateGame() {
 
     function totalPlayersSetup() {
         const totalPlayerCount = Number(players.value);
-        //console.log("Total players being setup: ", totalPlayerCount);
-        if (totalPlayerCount != 0 && totalPlayerCount <= totalPlayersAllowed) {
+       if (totalPlayerCount != 0 && totalPlayerCount <= totalPlayersAllowed) {
             let element = document.getElementById("playersArea");
             while (element.firstChild) {
                 element.removeChild(element.firstChild);
@@ -88,10 +87,8 @@ function CreateGame() {
                 player.setAttribute('id', `player${totalPlayerIncrement}`);
                 player.setAttribute('class', 'player');
                 playersArea.appendChild(player);
-                const newPlayer = playersArea.querySelector(`#player${totalPlayerIncrement}`);
                 //initializing array for separate player guess pools.
                 guessCountArray.push({ player: `player${totalPlayerIncrement}`, guess: 1, });
-                //console.log("Is it happening?", guessCountArray[totalPlayerIncrement-1]);
                 //label for guess input
                 const guessFieldLabel = document.createElement("label");
                 guessFieldLabel.setAttribute("for", `guessField${totalPlayerIncrement}`);
@@ -113,54 +110,36 @@ function CreateGame() {
                 const guessResultRange = ["guessRange", "guesses", "lastResult", "lowOrHi"];
                 for (element in guessResultRange) {
                     const htmlElement = document.createElement("p");
-                   // console.log(guessResultRange[element]);
                     htmlElement.setAttribute("class", guessResultRange[element]);
                     htmlElement.setAttribute('id', `${guessResultRange[element]}${Number(totalPlayerIncrement)}`);
                     resultParas.appendChild(htmlElement);
                 }
-                totalPlayerIncrement++;
-               // console.log(totalPlayerIncrement);              
+                totalPlayerIncrement++;              
             } while (totalPlayerIncrement <= totalPlayersAllowed && totalPlayerIncrement <= totalPlayerCount);
             if (totalPlayerIncrement == totalPlayerCount + 1) {
                 setUpMultiPlayerSubmitFunctionality(totalPlayerCount);
             }            
         } else {
-          //  console.log("NO");
             players.value = '';
             players.focus();
             return;
         }
         players.value = '';
-        //players.focus();
-
         const guessField = playersArea.querySelector(`#guessField1`);
         guessField.focus();
-
     }
 
     function setUpMultiPlayerSubmitFunctionality(totalPlayersCreated) {
         let totalPlayers = Number(totalPlayersCreated);
-       // console.log("YOWTF", totalPlayers);
         do {
             const guessField = playersArea.querySelector(`#guessField${totalPlayers}`);
-           // console.log(guessField);            
             guessField.addEventListener('keydown', submitAnswerByKeyPress);
             totalPlayers--;
         } while (totalPlayers > 0);    
     }
-
-
     /*
-     * 
      * Multiplayer creation end
-     * 
      */ 
-
-
-
-
-
-
 
     function createNumberLine() {
         let numberLineIncrement = 0;
@@ -183,10 +162,9 @@ function CreateGame() {
 
     // checkGuess() is ALOT, break functionality up a bit?
     function checkGuess(numberId) {//should be fed >0 values, should be checked here or at call, or both?
-        //console.log();
         const guessField = playersArea.querySelector(`#guessField${numberId}`);
         let userGuess = Number(guessField.value);
-        console.log(`userGuess: ${userGuess}, current low value: ${guessLow}, current high value: ${guessHigh}`);
+      //  console.log(`userGuess: ${userGuess}, current low value: ${guessLow}, current high value: ${guessHigh}`);
         if (userGuess < 1 || userGuess > totalNumber) { //checking for user input to be valid input (1 -> totalNumber)
             userGuess = null;
             console.log("A value was entered that resulted in a 'null' value");
@@ -201,8 +179,6 @@ function CreateGame() {
         const playerGuesses = playersArea.querySelector(`#guesses${numberId}`);
         const playerLastResult = playersArea.querySelector(`#lastResult${numberId}`);
         const playerLowOrHi = playersArea.querySelector(`#lowOrHi${numberId}`);
-
-
         /*
          * this doesnt work for multiplayer, the message only writes on the first guess for player 1.
          * due to shared total guesses. Need to create separate guessing pools.
@@ -221,18 +197,9 @@ function CreateGame() {
             }            
         }
 
-        console.log(playerGuessing);
         if (playerGuessing.guess == 1) {
             playerGuesses.textContent = 'Previous guesses: ';
         }
-        //if (guessCount === 1) {       
-        //    playerGuesses.textContent = 'Previous guesses: ';
-        //}
-
-
-
-
-
 
         if (userGuess === randomNumber) {
             playerLastResult.textContent = 'Congratulations! You got it right!';
@@ -249,7 +216,6 @@ function CreateGame() {
             if (userGuess < randomNumber) {
                 if (guessLow == null) {
                     guessLow = userGuess;
-                   // console.log(`guessLow is being populated with a value for the first time: ${guessLow}`)
                     setGuessingRange(userGuess, guessHigh);
                     setNumbersGuessed(guessLow, guessHigh);
                     playerLowOrHi.textContent = `First low end guess: ${userGuess} was a too low!`;
@@ -265,7 +231,6 @@ function CreateGame() {
                     return;
                 } else {
                     guessLow = userGuess;
-                  //  console.log(`User guess: ${userGuess} is still lower than the secret number`);
                     setGuessingRange(userGuess, guessHigh);
                     setNumbersGuessed(guessLow, guessHigh);
                     playerLowOrHi.textContent = `Current guess: ${userGuess} was too low!`;
@@ -274,7 +239,6 @@ function CreateGame() {
             else if (userGuess > randomNumber) {
                 if (guessHigh == null) {
                     guessHigh = userGuess;
-                    //console.log(`guessHigh is being populated with a value for the first time: ${guessHigh}`)
                     setGuessingRange(guessLow, userGuess);
                     setNumbersGuessed(guessLow, guessHigh);
                     playerLowOrHi.textContent = `First high end guess: ${userGuess} was too high!`;
@@ -290,7 +254,6 @@ function CreateGame() {
                     return;
                 } else {
                     guessHigh = userGuess;
-                    //console.log(`User guess: ${userGuess} is still higher than the secret number`);
                     setGuessingRange(guessLow, userGuess);
                     setNumbersGuessed(guessLow, guessHigh);
                     playerLowOrHi.textContent = `Current guess: ${userGuess} was too high!`;
@@ -299,25 +262,12 @@ function CreateGame() {
         }
       
         playerGuesses.textContent += `(${userGuess}) `;
-      //  console.log(`guessField: ${guessField.value}, playerGuesses: ${playerGuesses.innerHTML}, playerLastResult: ${playerLastResult.innerHTML}, playerLowOrHi: ${playerLowOrHi.innerHTML}`);
-
-        if (guessCount === 10) {
-            console.log("YOOOOOOO");
-        }
-        //console.log("player guess before incremenent: ",playerGuessing);
-       // playerGuessing.guess++
-
         for (playerGuess in guessCountArray) {
             console.log(guessCountArray[playerGuess].player);
             if (guessCountArray[playerGuess].player == `player${numberId}`) {
                 guessCountArray[playerGuess].guess++;
             }
-        }
-
-
-
-       // console.log("player after before incremenent: ", playerGuessing);
-        //guessCount++;
+        }       
         guessField.value = '';
         guessField.focus();
     } 
@@ -343,17 +293,14 @@ function CreateGame() {
         //console.log(`low: ${low} high: ${high}`)
         do {            
             if (numLineIncr <= low && low != null) {
-                //  console.log(`setting number ${numLineIncr} to red from low side.`);
                 document.querySelector(`#number${numLineIncr}`).style.color = 'white';
                 document.querySelector(`#number${numLineIncr}`).style.backgroundColor = 'red';
             } else if (numLineIncr >= high && high != null) {
-                //     console.log(`setting number ${numLineIncr} to red from high side.`);
-                //console.log("tock");
                 document.querySelector(`#number${numLineIncr}`).style.color = 'white';
                 document.querySelector(`#number${numLineIncr}`).style.backgroundColor = 'red';
             } else {               
-                    document.querySelector(`#number${numLineIncr}`).style.color = 'black';
-                    document.querySelector(`#number${numLineIncr}`).style.backgroundColor = 'white';               
+                document.querySelector(`#number${numLineIncr}`).style.color = 'black';
+                document.querySelector(`#number${numLineIncr}`).style.backgroundColor = 'white';               
             }            
             //if ()
             numLineIncr++;
@@ -384,7 +331,6 @@ function CreateGame() {
    //setGuessingRange(null, null);
 
     function setGameOver() {
-      //playersArea.querySelectorAll()
         const container = document.querySelector("#playersArea");
         const guessFields = container.querySelectorAll("input.guessField");
         console.log('setGameOver() fired', container, guessFields);
@@ -394,7 +340,6 @@ function CreateGame() {
         }
 
         resetButton = document.createElement('button');
-        //resetButton.setAttribute('id', 'resetButton');
         resetButton.textContent = 'Start new game';
         gameHolder.append(resetButton);       
         resetButton.addEventListener('click', resetGame);
@@ -411,14 +356,11 @@ function CreateGame() {
         guessCount = 1;
         for (playerGuess in guessCountArray) {
             console.log(guessCountArray[playerGuess].player);
-            if (guessCountArray[playerGuess].player == `player${playerGuess + 1}`) {
+            if (guessCountArray[playerGuess].player == `player${Number(playerGuess) + 1}`) {
                 console.log("is it getting here");
                 guessCountArray[playerGuess].guess = 1;
             }
         }
-
-        //guessCountArray = [];
-
         guessLow = null;
         guessHigh = null;
         const resetNumbers = document.querySelectorAll('#numberLine p');
@@ -441,7 +383,6 @@ function CreateGame() {
             guessFields[g].value = '';
         }       
         guessFields[0].focus();
-        //playerLastResult.style.backgroundColor = 'white';
         randomNumber = Math.floor(Math.random() * totalNumber) + 1;
     }
 
