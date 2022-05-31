@@ -12,11 +12,10 @@ document.body.onload = CreateGame();
 function CreateGame() {
     const totalNumber = 100;// max number to guess
     const gameWidth = 1000;
-    let randomNumber = Math.floor(Math.random() * totalNumber) + 1; //secret number to guess
-    let guessCount = 1; 
-    const totalGuesses = 3; // max guesses allowed
+    let randomNumber = 4; //Math.floor(Math.random() * totalNumber) + 1; //secret number to guess
+   // let guessCount = 1; 
+    const totalGuesses = 10; // max guesses allowed
     let guessCountArray = []; // multiplayer guess pool.
-
     let resetButton;
     let guessLow = null;
     let guessHigh = null; 
@@ -157,11 +156,13 @@ function CreateGame() {
         } while (numberLineIncrement < totalNumber);
     }
     createNumberLine();
-  
-
 
     // checkGuess() is ALOT, break functionality up a bit?
-    function checkGuess(numberId) {//should be fed >0 values, should be checked here or at call, or both?
+    function checkGuess(numberId) { //should be fed > 0 values, should be checked here or at call, or both?
+        if (numberId == false) { //This should never happen, 
+            console.log("numberId cant be less than 1.");
+            return;
+        }
         const guessField = playersArea.querySelector(`#guessField${numberId}`);
         let userGuess = Number(guessField.value);
       //  console.log(`userGuess: ${userGuess}, current low value: ${guessLow}, current high value: ${guessHigh}`);
@@ -172,23 +173,16 @@ function CreateGame() {
             guessField.focus();
             return;
         }
-
-        if (numberId == 0) {
+        if (numberId == false) { //This should never happen, 
             console.log("found you lil bastard");
         }
         const playerGuesses = playersArea.querySelector(`#guesses${numberId}`);
         const playerLastResult = playersArea.querySelector(`#lastResult${numberId}`);
-        const playerLowOrHi = playersArea.querySelector(`#lowOrHi${numberId}`);
-        /*
-         * this doesnt work for multiplayer, the message only writes on the first guess for player 1.
-         * due to shared total guesses. Need to create separate guessing pools.
-         */
+        const playerLowOrHi = playersArea.querySelector(`#lowOrHi${numberId}`);        
         const playerGuessing = {
             player: "",
-            guess: 0,
-            
-        };
-       
+            guess: 1,            
+        };       
         for (playerGuess in guessCountArray) {
             console.log(guessCountArray[playerGuess].player);
             if (guessCountArray[playerGuess].player == `player${numberId}`) {               
@@ -196,14 +190,19 @@ function CreateGame() {
                 playerGuessing.guess = guessCountArray[playerGuess].guess;
             }            
         }
-
         if (playerGuessing.guess == 1) {
             playerGuesses.textContent = 'Previous guesses: ';
         }
-
         if (userGuess === randomNumber) {
+            const playersLastResults = playersArea.querySelectorAll("p.lastResult");
+            let resultCheck = 0;
+            do {
+                playersLastResults[resultCheck].textContent = 'You have lost, good luck next time!';
+                playersLastResults[resultCheck].style.backgroundColor = "red";               
+                resultCheck++;
+            } while (resultCheck < playersLastResults.length);
             playerLastResult.textContent = 'Congratulations! You got it right!';
-            playerLastResult.style.backgroundColor = 'green';
+            playerLastResult.style.backgroundColor = "green";
             playerLowOrHi.textContent = '';
             setGameOver();
         } else if (playerGuessing.guess == totalGuesses) { //this needs to be changed to account for all players total pools being used up. 
@@ -212,12 +211,12 @@ function CreateGame() {
             setGameOver();
         } else {
             playerLastResult.textContent = 'Wrong!';
-            playerLastResult.style.backgroundColor = 'red';
-            if (userGuess < randomNumber) {
+            playerLastResult.style.backgroundColor = "red";
+            if (userGuess < randomNumber) { //User guess is lower than secret number
                 if (guessLow == null) {
                     guessLow = userGuess;
-                    setGuessingRange(userGuess, guessHigh);
-                    setNumbersGuessed(guessLow, guessHigh);
+                   // setGuessingRange(userGuess, guessHigh, userGuess);
+                    setNumbersGuessed(guessLow, guessHigh, userGuess);
                     playerLowOrHi.textContent = `First low end guess: ${userGuess} was a too low!`;
                 } else if (userGuess < guessLow) {
                     playerLowOrHi.textContent = `Current guess: ${userGuess} is lower than the range! (${guessLow} - ${guessHigh})`;                   
@@ -231,16 +230,16 @@ function CreateGame() {
                     return;
                 } else {
                     guessLow = userGuess;
-                    setGuessingRange(userGuess, guessHigh);
-                    setNumbersGuessed(guessLow, guessHigh);
+                    //setGuessingRange(userGuess, guessHigh, userGuess);
+                    setNumbersGuessed(guessLow, guessHigh, userGuess);
                     playerLowOrHi.textContent = `Current guess: ${userGuess} was too low!`;
                 }           
             }
-            else if (userGuess > randomNumber) {
+            else if (userGuess > randomNumber) { //User guess is higher than secret number
                 if (guessHigh == null) {
                     guessHigh = userGuess;
-                    setGuessingRange(guessLow, userGuess);
-                    setNumbersGuessed(guessLow, guessHigh);
+                   // setGuessingRange(guessLow, userGuess, userGuess);
+                    setNumbersGuessed(guessLow, guessHigh, userGuess);
                     playerLowOrHi.textContent = `First high end guess: ${userGuess} was too high!`;
                 } else if (userGuess > guessHigh) {
                     playerLowOrHi.textContent = `Current guess: ${userGuess} is higher than the range! (${guessLow} - ${guessHigh})`;                   
@@ -254,13 +253,12 @@ function CreateGame() {
                     return;
                 } else {
                     guessHigh = userGuess;
-                    setGuessingRange(guessLow, userGuess);
-                    setNumbersGuessed(guessLow, guessHigh);
+                   // setGuessingRange(guessLow, userGuess, userGuess);
+                    setNumbersGuessed(guessLow, guessHigh, userGuess);
                     playerLowOrHi.textContent = `Current guess: ${userGuess} was too high!`;
                 }               
             }
-        }
-      
+        }      
         playerGuesses.textContent += `(${userGuess}) `;
         for (playerGuess in guessCountArray) {
             console.log(guessCountArray[playerGuess].player);
@@ -269,7 +267,14 @@ function CreateGame() {
             }
         }       
         guessField.value = '';
-        guessField.focus();
+
+        //moves focus from one player to the next so you dont have to use mouse.
+        const guessFields = playersArea.querySelectorAll("input");
+        if (numberId < playersArea.querySelectorAll("input").length) {
+            guessFields[numberId].focus();
+        } else {
+            guessFields[0].focus();
+        }        
     } 
        
            
@@ -287,24 +292,31 @@ function CreateGame() {
         e.preventDefault();        
     }
 
+
+    const colors = ["green", "orange"];
     //Number line UI for showing current guesses and range of what is left to guess
-    function setNumbersGuessed(low, high) {
+    function setNumbersGuessed(low, high, current) {
+
         let numLineIncr = 1;
         //console.log(`low: ${low} high: ${high}`)
         do {            
             if (numLineIncr <= low && low != null) {
                 document.querySelector(`#number${numLineIncr}`).style.color = 'white';
-                document.querySelector(`#number${numLineIncr}`).style.backgroundColor = 'red';
+                document.querySelector(`#number${numLineIncr}`).style.backgroundColor = 'red';              
             } else if (numLineIncr >= high && high != null) {
                 document.querySelector(`#number${numLineIncr}`).style.color = 'white';
                 document.querySelector(`#number${numLineIncr}`).style.backgroundColor = 'red';
-            } else {               
-                document.querySelector(`#number${numLineIncr}`).style.color = 'black';
-                document.querySelector(`#number${numLineIncr}`).style.backgroundColor = 'white';               
-            }            
+            } 
+
+            //else {
+            //    document.querySelector(`#number${numLineIncr}`).style.color = 'black';
+            //    document.querySelector(`#number${numLineIncr}`).style.backgroundColor = 'white';
+            //}
             //if ()
             numLineIncr++;
         } while (numLineIncr <= totalNumber);
+       document.querySelector(`#number${current}`).style.color = 'white';
+       document.querySelector(`#number${current}`).style.backgroundColor = 'green';
     }
 
     //UI for showing range of guesses
@@ -340,9 +352,13 @@ function CreateGame() {
         }
 
         resetButton = document.createElement('button');
+        //resetButton.setAttribute("type", "submit");
+        //resetButton.setAttribute("id", "resetButton");
         resetButton.textContent = 'Start new game';
-        gameHolder.append(resetButton);       
-        resetButton.addEventListener('click', resetGame);
+        gameHolder.append(resetButton);
+        //rButton = document.getElementById("resetButton")
+        //resetButton.focus();
+        resetButton.addEventListener("click", resetGame);
     }
 
     //function resetGuessingRange() {
