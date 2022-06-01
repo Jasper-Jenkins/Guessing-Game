@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\css"
+    "\\css",
+    "\\javascript"
   ],
-  "SelectedNode": "\\guessingGame.js",
+  "SelectedNode": "\\javascript\\bouncing-balls.js",
   "PreviewInSolutionExplorer": false
 }
